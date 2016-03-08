@@ -46,6 +46,8 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\basicCommands.cs" />
+     <Compile Include="Assets\Scripts\gameThemes.cs" />
+     <Compile Include="Assets\Scripts\infoTheme.cs" />
      <Compile Include="Assets\Scripts\moveOffSet.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
