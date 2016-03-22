@@ -33,6 +33,7 @@ public class gameThemes : MonoBehaviour {
 
 	}
 
+	//usada quando clica em algum tema
 	public void selectTheme(int i)
 	{
 		idTema = i;
@@ -42,6 +43,7 @@ public class gameThemes : MonoBehaviour {
 		textInfoTema.text = "Voce Acertou "+acertos+" de "+numeroQuestoes;
 	}
 
+	//usada quando clica no play
 	public void play()
 	{
 		Application.LoadLevel ("quiz-tema"+idTema);	
