@@ -4,7 +4,7 @@ using System.Collections;
 
 public class answer : MonoBehaviour {
 
-	public int idTema;
+	private int idTema;
 
 	public Text pergunta;
 	public Text Resp1;
@@ -25,9 +25,11 @@ public class answer : MonoBehaviour {
 	private float acertos;
 	private float questoes;
 	private float media;
+	private int notaFinal;
 
 	// Use this for initialization
 	void Start () {
+		idTema = PlayerPrefs.GetInt ("idTema");
 		idPergunta = 0;
 		questoes = perguntas.Length;
 		pergunta.text = perguntas [idPergunta];
@@ -71,8 +73,9 @@ public class answer : MonoBehaviour {
 			break;
 
 		}
-
+		Debug.Log ("notafinal "+notaFinal+" acertos "+acertos);
 		proximaPergunta ();
+		Debug.Log ("notafinal "+notaFinal+" acertos "+acertos);
 	}
 
 	void proximaPergunta()
@@ -89,6 +92,18 @@ public class answer : MonoBehaviour {
 			info.text = "Respondendo "+(idPergunta +1).ToString()
 				+ " de "+questoes.ToString()+" perguntas.";
 		} else {
+			media = 10 * (acertos/questoes);
+			notaFinal = Mathf.RoundToInt(media);
+
+			if(notaFinal > PlayerPrefs.GetInt("notaFinal"+idTema.ToString ()) )//so grava aqui se bater o recorde
+			{
+				PlayerPrefs.SetInt ("notaFinal"+idTema.ToString (),notaFinal);
+				PlayerPrefs.SetInt ("acertos"+idTema.ToString (), (int) acertos);
+			}
+
+			PlayerPrefs.SetInt ("notaFinalTemp"+idTema.ToString (),notaFinal);
+			PlayerPrefs.SetInt ("acertosTemp"+idTema.ToString (), (int) acertos);
+
 			Application.LoadLevel("quiz-nota");
 		}
 

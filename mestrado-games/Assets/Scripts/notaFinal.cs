@@ -1,30 +1,39 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
-public class infoTheme : MonoBehaviour {
+public class notaFinal : MonoBehaviour {
 
+	private int idTema;
 
-	public int idTema;
-
-	private int notaF;
+	public Text txtTema;
+	public Text txtNota;
 
 	public GameObject medalhaBronze;
 	public GameObject medalhaPrata;
 	public GameObject medalhaOuro;
 
-	private int notaFinal;
+	private int notaF;
+	private int acertos;
 
 
 	// Use this for initialization
 	void Start () {
-	
+
 		medalhaBronze.SetActive (false);
 		medalhaPrata.SetActive (false);
 		medalhaOuro.SetActive (false);
 
 
-		notaF = PlayerPrefs.GetInt ("notaFinal"+idTema.ToString ());
-		Debug.Log (notaF+" nofaF dentro de infoTheme"+idTema);
+		idTema = PlayerPrefs.GetInt("idTema");
+		Debug.Log (idTema);
+		notaF = PlayerPrefs.GetInt ("notaFinalTemp"+idTema.ToString ());
+		acertos = PlayerPrefs.GetInt ("acertosTemp"+idTema.ToString ());
+
+		txtNota.text = notaF.ToString ();
+
+		txtTema.text = "Voce acertou "+acertos.ToString()+" de x pergutnas"; 
+
 		if (notaF == 10) {
 			medalhaBronze.SetActive (true);
 			medalhaPrata.SetActive (true);
@@ -38,6 +47,12 @@ public class infoTheme : MonoBehaviour {
 			medalhaPrata.SetActive (false);
 			medalhaOuro.SetActive (false);
 		}
+
 	}
+
+	public void jogarNovamente(){
+		Application.LoadLevel ("quiz-tema"+idTema);	
+	}
+
 
 }
