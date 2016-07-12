@@ -1,0 +1,5 @@
+CREATE  TABLE "main"."quizgame_temas" ("idtema" INTEGER PRIMARY KEY  NOT NULL , "tema_desc" TEXT, "tema_pontos" INTEGER)
+
+CREATE  TABLE "main"."quizgame_perguntas" ("idpergunta" INTEGER PRIMARY KEY  NOT NULL , "alternativa1" TEXT, "alternativa2" TEXT, "alternativa3" TEXT, "alternativa4" TEXT, "alternativa_correta" INTEGER)
+
+insert into quizgame_perguntas values ('1','resposta1','reposta2','resposta3','resposta4','resposta1');

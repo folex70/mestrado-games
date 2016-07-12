@@ -19,7 +19,7 @@ public class notaFinal : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+		
 		medalhaBronze.SetActive (false);
 		medalhaPrata.SetActive (false);
 		medalhaOuro.SetActive (false);

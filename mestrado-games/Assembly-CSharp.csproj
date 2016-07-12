@@ -45,17 +45,31 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\DBManager.cs" />
      <Compile Include="Assets\Scripts\answer.cs" />
      <Compile Include="Assets\Scripts\basicCommands.cs" />
      <Compile Include="Assets\Scripts\gameThemes.cs" />
      <Compile Include="Assets\Scripts\infoTheme.cs" />
      <Compile Include="Assets\Scripts\moveOffSet.cs" />
      <Compile Include="Assets\Scripts\notaFinal.cs" />
+     <None Include="Assets\Scripts\SQL.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Networking">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ </Reference>
+ <Reference Include="Mono.Data.Sqlite">
+ <HintPath>C:/Users/fx/Documents/mestrado-games/mestrado-games/Assets/plugins/Mono.Data.Sqlite.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Data">
+ <HintPath>C:/Users/fx/Documents/mestrado-games/mestrado-games/Assets/plugins/System.Data.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Data">
+ <HintPath>C:/Users/fx/Documents/mestrado-games/mestrado-games/Assets/Plugins/System.Data.dll</HintPath>
+ </Reference>
+ <Reference Include="Mono.Data.Sqlite">
+ <HintPath>C:/Users/fx/Documents/mestrado-games/mestrado-games/Assets/Plugins/Mono.Data.Sqlite.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
