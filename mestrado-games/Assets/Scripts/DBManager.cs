@@ -16,6 +16,7 @@ public class DBManager : MonoBehaviour {
 		connectionString = "URI=file:" + Application.dataPath + "/DB/Quizgame.sqlite";
 		GetQuestoes();
 		//SetQuestoes("aaaaaa","bbbbbb","cccccccc","dddddddddd","aaaaa");
+		//DeleteQuestoes(2);
 	}
 	
 	// Update is called once per frame
@@ -49,7 +50,7 @@ public class DBManager : MonoBehaviour {
 		}
 		
 	}
-	
+	//insert
 	private void SetQuestoes(string alternativa1,string alternativa2,string alternativa3,string alternativa4,string alternativa_correta){
 		using (IDbConnection dbConnection = new SqliteConnection(connectionString)){
 			
@@ -66,4 +67,21 @@ public class DBManager : MonoBehaviour {
 			}
 		}
 	}
+	
+	private void DeleteQuestoes(int idpergunta){
+		using (IDbConnection dbConnection = new SqliteConnection(connectionString)){
+			
+			dbConnection.Open();
+			
+			using (IDbCommand dbCmd = dbConnection.CreateCommand()){
+				string sqlQuery = String.Format("delete from quizgame_perguntas where idpergunta = (\"{0}\");",idpergunta);
+				
+				dbCmd.CommandText = sqlQuery;
+				dbCmd.ExecuteScalar();
+				dbConnection.Close();
+
+			}
+		}
+	}
+	
 }
