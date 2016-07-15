@@ -3,13 +3,15 @@ using System.Collections;
 using System;
 using System.Data;
 using Mono.Data.Sqlite;
+using System.Collections.Generic;
 
 public class DBManager : MonoBehaviour {
 
 	private string connectionString;
 	public int i;
-
-
+	
+	private List<Pergunta> perguntasLista = new List<Pergunta>();
+	
 	// Use this for initialization
 	void Start () {
 		i=1;
@@ -26,6 +28,8 @@ public class DBManager : MonoBehaviour {
 	
 	private void GetQuestoes(){
 		
+		perguntasLista.Clear();
+		
 		using (IDbConnection dbConnection = new SqliteConnection(connectionString)){
 			
 			dbConnection.Open();
@@ -37,11 +41,13 @@ public class DBManager : MonoBehaviour {
 				
 				using (IDataReader reader = dbCmd.ExecuteReader()){
 					while(reader.Read()){
-						Debug.Log(reader.GetString(1)+" - "
+						/*Debug.Log(reader.GetString(1)+" - "
 														+reader.GetString(2)+" - "
 														+reader.GetString(3)+" - "
 														+reader.GetString(4)+" - "
-														+reader.GetString(5) );
+														+reader.GetString(5) );*/
+						//@TODO: adicionar o campo pergunta a tabela quizgame_perguntas
+						perguntasLista.Add(new Pergunta(reader.GetInt32(0),reader.GetString(1),reader.GetString(2),reader.GetString(3),reader.GetString(4),reader.GetString(5),reader.GetString(6)));
 					}
 					dbConnection.Close();
 					reader.Close();

@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\DBManager.cs" />
+     <Compile Include="Assets\Scripts\Pergunta.cs" />
      <Compile Include="Assets\Scripts\answer.cs" />
      <Compile Include="Assets\Scripts\basicCommands.cs" />
      <Compile Include="Assets\Scripts\gameThemes.cs" />
