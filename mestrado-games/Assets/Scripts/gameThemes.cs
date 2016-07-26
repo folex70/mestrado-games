@@ -35,32 +35,45 @@ public class gameThemes : MonoBehaviour {
 		medalhaOuro.SetActive (false);
 		btnPlay.interactable = false;
 		btnDelete.interactable = false;
-		//Debug.Log(DBManager.temasLista[0].IdTema);
+		string sceneName = SceneManager.GetActiveScene().name;
 
-		for(int i = 0; i < DBManager.temasLista.Count; i++){
-			nomeTema [i+1] = DBManager.temasLista [i].Tema;
+		if (sceneName == "quiz-temas") {
+			for (int i = 0; i < DBManager.temasLista.Count; i++) {
+				nomeTema [i + 1] = DBManager.temasLista [i].Tema;
+			}
+		} else if (sceneName == "vouf-temas") {
+			//Debug.Log (DBManager.voufTemasLista.Count);
+			for (int i = 0; i < DBManager.voufTemasLista.Count; i++) {
+				nomeTema [i + 1] = DBManager.voufTemasLista [i].Tema;
+				Debug.Log (DBManager.voufTemasLista [i].Tema);
+			}
 		}
 	}
 
 	//usada quando clica em algum tema
 	public void selectTheme(int i)
 	{
-		//Debug.Log(PlayerPrefs.GetInt("idTema"));
+		string sceneName = SceneManager.GetActiveScene().name;
+		//Debug.Log(PlayerPrefs.GetInt("idTema")+" - "+nomeTema [i]);
 		if (nomeTema [i] != "Vazio") {
 			//carregar perguntas desse tema 
 			//DBManager.GetPerguntaByTema(nomeTema[i]);
-
 			idTema = i;
-			PlayerPrefs.SetInt ("idTema", idTema);
 			textNomeTema.text = nomeTema [i];
 			infoTemas.SetActive (true);	
 			btnPlay.interactable = true;
 			btnDelete.interactable = true;
-
 			textInfoTema.text = "Voce Acertou " + acertos + " de 10";//+numeroQuestoes;
 
-			notaF = PlayerPrefs.GetInt ("notaFinal" + idTema.ToString ());
-			acertos = PlayerPrefs.GetInt ("acertos" + idTema.ToString ());
+			if (sceneName == "quiz-temas") {
+				PlayerPrefs.SetInt ("idTema", idTema);
+				notaF = PlayerPrefs.GetInt ("notaFinal" + idTema.ToString ());
+				acertos = PlayerPrefs.GetInt ("acertos" + idTema.ToString ());
+			} else if (sceneName == "vouf-temas") {
+				PlayerPrefs.SetInt ("voufidTema", idTema);
+				notaF = PlayerPrefs.GetInt ("voufnotaFinal" + idTema.ToString ());
+				acertos = PlayerPrefs.GetInt ("voufacertos" + idTema.ToString ());
+			}
 
 			if (notaF == 10) {
 				medalhaBronze.SetActive (true);
@@ -81,7 +94,11 @@ public class gameThemes : MonoBehaviour {
 			}
 		} else {
 			idTema = i;
-			PlayerPrefs.SetInt ("idTema", idTema);
+			if (sceneName == "quiz-temas") {
+				PlayerPrefs.SetInt ("idTema", idTema);
+			} else if (sceneName == "vouf-temas") {
+				PlayerPrefs.SetInt ("voufidTema", idTema);
+			}
 			textNomeTema.text = nomeTema [i];
 			infoTemas.SetActive (false);
 			medalhaBronze.SetActive (false);
@@ -95,8 +112,13 @@ public class gameThemes : MonoBehaviour {
 	//usada quando clica no play
 	public void play()
 	{
-		//Application.LoadLevel ("quiz-tema1");	
-		SceneManager.LoadScene ("quiz-tema1");
+		string sceneName = SceneManager.GetActiveScene().name;
+		if (sceneName == "quiz-temas") {
+			SceneManager.LoadScene ("quiz-tema1");
+		}
+		else if(sceneName == "vouf-temas") {
+			SceneManager.LoadScene ("vouf-tema1");
+		}
 	}
 
 }

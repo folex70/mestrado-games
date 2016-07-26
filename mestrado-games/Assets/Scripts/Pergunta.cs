@@ -38,4 +38,17 @@ public class Pergunta{
 		this.IdTema       = idtema;
 		this.Tema 	 	  = tema;
 	}
+
+	public Pergunta(int idpergunta,
+					string pergunta1,
+					string resposta1,
+					int idtema,
+					string tema	)
+	{
+		this.IdPergunta 	= idpergunta;
+		this.Pergunta1 		= pergunta1;
+		this.Resposta1 	  	= resposta1;
+		this.IdTema       	= idtema;
+		this.Tema 	 	  	= tema;
+	}
 }

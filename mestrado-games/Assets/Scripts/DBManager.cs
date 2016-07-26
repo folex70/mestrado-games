@@ -15,6 +15,9 @@ public class DBManager : MonoBehaviour {
 	static public List<Pergunta> perguntasLista = new List<Pergunta>();
 	static public List<Temas>temasLista = new List<Temas>();
 
+	static public List<Pergunta> voufPerguntasLista = new List<Pergunta>();
+	static public List<Temas> voufTemasLista = new List<Temas>();
+
 	public Text textTema;
 	public InputField enterTema;
 	public InputField enterPergunta1;
@@ -29,15 +32,11 @@ public class DBManager : MonoBehaviour {
 		
 	// Use this for initialization
 	void Start () {
-		//i=1;
 		connectionString = "URI=file:" + Application.dataPath + "/mestradodb.sqlite";
 		CreateTable ();
-		//GetQuestoes();
+		voufCreateTable ();
 		GetTemas ();
-		//ShowTemas ();
-		//SetQuestoes("aaaaaa","bbbbbb","cccccccc","dddddddddd","aaaaa");
-		//DeleteQuestoes(2);
-		//Debug.Log(temasLista.Count);
+		voufGetTemas ();
 		countPerguntasCadastradas = 0;
 	}
 	
@@ -50,9 +49,20 @@ public class DBManager : MonoBehaviour {
 		//Debug.Log ("entrou na createtable");
 		using (IDbConnection dbConnection = new SqliteConnection (connectionString)) {
 			dbConnection.Open ();
-
 			using (IDbCommand dbCmd = dbConnection.CreateCommand ()) {
 				string sqlQuery = String.Format ("CREATE  TABLE  IF NOT EXISTS main.quizGame_table (idpergunta INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , pergunta TEXT NOT NULL , resposta1 TEXT NOT NULL , resposta2 TEXT NOT NULL , resposta3 TEXT NOT NULL , resposta4 TEXT NOT NULL , resposta_correta TEXT NOT NULL , pontos INTEGER NOT NULL ,idtema INTEGER NOT NULL , tema TEXT NOT NULL , data DATETIME NOT NULL  DEFAULT CURRENT_TIME)");
+				dbCmd.CommandText = sqlQuery;
+				dbCmd.ExecuteScalar();
+				dbConnection.Close();
+			}
+		}
+	}
+
+	private void voufCreateTable(){
+		using (IDbConnection dbConnection = new SqliteConnection (connectionString)) {
+			dbConnection.Open ();
+			using (IDbCommand dbCmd = dbConnection.CreateCommand ()) {
+				string sqlQuery = String.Format ("CREATE  TABLE  IF NOT EXISTS \"main\".\"voufGame_table\" (\"idpergunta\" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , \"pergunta\" TEXT NOT NULL ,\"verdadeiro_ou_falso\" TEXT NOT NULL , \"idtema\" INTEGER NOT NULL , \"tema\" TEXT NOT NULL , \"data\" DATETIME NOT NULL  DEFAULT CURRENT_TIME)");
 				dbCmd.CommandText = sqlQuery;
 				dbCmd.ExecuteScalar();
 				dbConnection.Close();
@@ -130,6 +140,28 @@ public class DBManager : MonoBehaviour {
 
 	}
 
+	public void voufGetPerguntaByTema(int idtema){
+
+		voufPerguntasLista.Clear();
+
+		using (IDbConnection dbConnection = new SqliteConnection(connectionString)){
+
+			dbConnection.Open();
+
+			using (IDbCommand dbCmd = dbConnection.CreateCommand()){
+				string sqlQuery = String.Format("SELECT * FROM voufGame_table where idtema = (\"{0}\");",idtema);
+				dbCmd.CommandText = sqlQuery;
+				using (IDataReader reader = dbCmd.ExecuteReader()){
+					while(reader.Read()){
+						voufPerguntasLista.Add(new Pergunta(reader.GetInt32(0),reader.GetString(1),reader.GetString(2),reader.GetInt32(3),reader.GetString(4)));
+					}
+					dbConnection.Close();
+					reader.Close();
+				}
+			}
+		}
+	}
+
 	private void GetTemas(){
 
 		temasLista.Clear();
@@ -155,6 +187,25 @@ public class DBManager : MonoBehaviour {
 			}
 		}
 	}
+
+	private void voufGetTemas(){
+		voufTemasLista.Clear();
+		using (IDbConnection dbConnection = new SqliteConnection(connectionString)){
+			dbConnection.Open();
+			using (IDbCommand dbCmd = dbConnection.CreateCommand()){
+				string sqlQuery = "select distinct idtema,tema from voufgame_table";
+				dbCmd.CommandText = sqlQuery;
+				using (IDataReader reader = dbCmd.ExecuteReader()){
+					while(reader.Read()){
+						voufTemasLista.Add(new Temas(reader.GetInt32(0),reader.GetString(1)));
+					}
+					dbConnection.Close();
+					reader.Close();
+				}
+			}
+		}
+	}
+
 
 	//carregar e colocar na tela os temas
 	private void ShowPerguntas()
@@ -201,19 +252,29 @@ public class DBManager : MonoBehaviour {
 			}
 		}
 	}
-	
-	private void DeleteQuestoes(int idpergunta){
+
+	//insert
+	private void voufInsertQuestoes(string pergunta,string alternativa_correta, int idtema, string tema ){
 		using (IDbConnection dbConnection = new SqliteConnection(connectionString)){
-			
 			dbConnection.Open();
-			
 			using (IDbCommand dbCmd = dbConnection.CreateCommand()){
-				string sqlQuery = String.Format("delete from  quizGame_table where idpergunta = (\"{0}\");",idpergunta);
-				
+				string sqlQuery = String.Format("insert into  voufGame_table(pergunta,verdadeiro_ou_falso,idtema,tema) values (\"{0}\",\"{1}\",\"{2}\",\"{3}\");"
+					,pergunta,alternativa_correta,idtema,tema);
 				dbCmd.CommandText = sqlQuery;
 				dbCmd.ExecuteScalar();
 				dbConnection.Close();
-
+			}
+		}
+	}
+	
+	private void DeleteQuestoes(int idpergunta){
+		using (IDbConnection dbConnection = new SqliteConnection(connectionString)){			
+			dbConnection.Open();			
+			using (IDbCommand dbCmd = dbConnection.CreateCommand()){
+				string sqlQuery = String.Format("delete from  quizGame_table where idpergunta = (\"{0}\");",idpergunta);
+				dbCmd.CommandText = sqlQuery;
+				dbCmd.ExecuteScalar();
+				dbConnection.Close();
 			}
 		}
 	}
@@ -233,6 +294,31 @@ public class DBManager : MonoBehaviour {
 
 				PlayerPrefs.SetInt ("notaFinal"+idTema.ToString (),0);
 				PlayerPrefs.SetInt ("acertos"+idTema.ToString (), (int) 0);
+
+				string sceneName = SceneManager.GetActiveScene().name;
+				// load the same scene
+				SceneManager.LoadScene(sceneName,LoadSceneMode.Single);
+
+			}
+		}
+	}
+
+	//delete
+	public void voufDeleteTema(){
+		int idTema = PlayerPrefs.GetInt ("voufidTema");
+		using (IDbConnection dbConnection = new SqliteConnection(connectionString)){
+
+			dbConnection.Open();
+
+			using (IDbCommand dbCmd = dbConnection.CreateCommand()){
+				string sqlQuery = String.Format("delete from  voufGame_table where idtema = (\"{0}\");",idTema);
+				Debug.Log (sqlQuery);
+				dbCmd.CommandText = sqlQuery;
+				dbCmd.ExecuteScalar();
+				dbConnection.Close();
+
+				PlayerPrefs.SetInt ("voufnotaFinal"+idTema.ToString (),0);
+				PlayerPrefs.SetInt ("voufacertos"+idTema.ToString (), (int) 0);
 
 				string sceneName = SceneManager.GetActiveScene().name;
 				// load the same scene
@@ -277,8 +363,35 @@ public class DBManager : MonoBehaviour {
 		enterAlternativa4.text	= string.Empty;
 	}
 
+	public void voufEnterPergunta(){
+
+		if (enterAlternativaCorreta.value == 0) {
+			alternativaCorreta = "V";
+		}
+		else if(enterAlternativaCorreta.value == 1){
+			alternativaCorreta = "F";
+		}
+
+		int idtema = voufTemasLista.Count + 1;
+
+		if (idtema <= 10 && countPerguntasCadastradas < 10) {
+			voufInsertQuestoes (enterPergunta1.text,alternativaCorreta, idtema, enterTema.text);
+			countPerguntasCadastradas++;
+			textTema.text = enterTema.text;
+			enterTema.gameObject.SetActive(false);
+		}else{
+			Debug.Log ("idtema: "+idtema+"-"+"Perguntas cadastradas: "+countPerguntasCadastradas);
+			SceneManager.LoadScene ("vouf-temas");
+
+		}	
+		enterPergunta1.text 	= string.Empty;
+	}
 
 	//CREATE  TABLE  IF NOT EXISTS "main"."quizGame_table" ("idpergunta" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , "pergunta" TEXT NOT NULL , "resposta1" TEXT NOT NULL , "resposta2" TEXT NOT NULL , "resposta3" TEXT NOT NULL , "resposta4" TEXT NOT NULL , "resposta_correta" TEXT NOT NULL , "idtema" INTEGER NOT NULL , "tema" TEXT NOT NULL , "data" DATETIME NOT NULL  DEFAULT CURRENT_TIME)
 	//select distinct idtema from quizgame_table ;
 	//--insert into quizGame_table(pergunta,resposta1,resposta2,resposta3,resposta4,resposta_correta,pontos,idtema,tema)  values('quanto é 2+2','1','2','3','4','4','0','1','matematica') ;
+	//CREATE  TABLE  IF NOT EXISTS "main"."voufGame_table" ("idpergunta" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , "pergunta" TEXT NOT NULL ,"verdadeiro_ou_falso" TEXT NOT NULL , "idtema" INTEGER NOT NULL , "tema" TEXT NOT NULL , "data" DATETIME NOT NULL  DEFAULT CURRENT_TIME)
+	//--insert into voufGame_table(pergunta,verdadeiro_ou_falso,pontos,idtema,tema)  values('2+2 e 4?','V','0','1','matematica') ;
+	//	INSERT INTO "main"."voufGame_table" ("pergunta","verdadeiro_ou_falso","idtema","tema") VALUES (?1,?2,?3,?4)	Parameters:	param 1 (text): 1+1 e igual a 2?	param 2 (text): V	param 3 (integer): 1	param 4 (text): matematica
+
 }
