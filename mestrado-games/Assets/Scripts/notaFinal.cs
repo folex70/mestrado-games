@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class notaFinal : MonoBehaviour {
 
@@ -24,7 +25,6 @@ public class notaFinal : MonoBehaviour {
 		medalhaPrata.SetActive (false);
 		medalhaOuro.SetActive (false);
 
-
 		idTema = PlayerPrefs.GetInt("idTema");
 		Debug.Log (idTema);
 		notaF = PlayerPrefs.GetInt ("notaFinalTemp"+idTema.ToString ());
@@ -32,7 +32,7 @@ public class notaFinal : MonoBehaviour {
 
 		txtNota.text = notaF.ToString ();
 
-		txtTema.text = "Voce acertou "+acertos.ToString()+" de x pergutnas"; 
+		txtTema.text = "Voce acertou "+acertos.ToString()+" de 10 pergutnas"; 
 
 		if (notaF == 10) {
 			medalhaBronze.SetActive (true);
@@ -47,11 +47,15 @@ public class notaFinal : MonoBehaviour {
 			medalhaPrata.SetActive (false);
 			medalhaOuro.SetActive (false);
 		}
-
 	}
 
 	public void jogarNovamente(){
-		Application.LoadLevel ("quiz-tema"+idTema);	
+
+		string sceneName = SceneManager.GetActiveScene().name;
+		if (sceneName == "quiz-nota") {
+			SceneManager.LoadScene ("quiz-tema1");		
+		}
+
 	}
 
 

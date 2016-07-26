@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class answer : MonoBehaviour {
 
@@ -29,6 +30,16 @@ public class answer : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		//carregar dados no arry com os da lista que veio do banco
+		for(int i = 0; i < DBManager.perguntasLista.Count; i++){
+			perguntas[i] 	= DBManager.perguntasLista [i].Pergunta1;
+			alternativaA[i] = DBManager.perguntasLista [i].Alternativa1;
+			alternativaB[i] = DBManager.perguntasLista [i].Alternativa2;
+			alternativaC[i] = DBManager.perguntasLista [i].Alternativa3;
+			alternativaD[i] = DBManager.perguntasLista [i].Alternativa4;
+			corretas[i] 	= DBManager.perguntasLista [i].Resposta1;
+		}
+
 		idTema = PlayerPrefs.GetInt ("idTema");
 		idPergunta = 0;
 		questoes = perguntas.Length;
@@ -40,7 +51,6 @@ public class answer : MonoBehaviour {
 
 		info.text = "Respondendo "+(idPergunta +1).ToString()
 			+ " de "+questoes.ToString()+" perguntas.";
-
 	}
 
 	public void resposta(string alternativa){
@@ -104,13 +114,8 @@ public class answer : MonoBehaviour {
 			PlayerPrefs.SetInt ("notaFinalTemp"+idTema.ToString (),notaFinal);
 			PlayerPrefs.SetInt ("acertosTemp"+idTema.ToString (), (int) acertos);
 
-			Application.LoadLevel("quiz-nota");
+			//Application.LoadLevel("quiz-nota");
+			SceneManager.LoadScene ("quiz-nota");
 		}
-
-	
-
-
 	}
-
-
 }

@@ -24,7 +24,7 @@ public class infoTheme : MonoBehaviour {
 
 
 		notaF = PlayerPrefs.GetInt ("notaFinal"+idTema.ToString ());
-		Debug.Log (notaF+" nofaF dentro de infoTheme"+idTema);
+		//Debug.Log (notaF+" nofaF dentro de infoTheme"+idTema);
 		if (notaF == 10) {
 			medalhaBronze.SetActive (true);
 			medalhaPrata.SetActive (true);
