@@ -1,11 +1,12 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\notaFinal.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\DBManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\DBManager.cs" Line="388" Column="3" />
-      <File FileName="Assets\Scripts\gameThemes.cs" Line="121" Column="4" />
-      <File FileName="Assets\Scripts\answer.cs" Line="177" Column="32" />
-      <File FileName="Assets\Scripts\notaFinal.cs" Line="71" Column="35" />
+      <File FileName="Assets\Scripts\DBManager.cs" Line="21" Column="50" />
+      <File FileName="Assets\Scripts\answer.cs" Line="155" Column="39" />
+      <File FileName="Assets\Scripts\gameForca.cs" Line="75" Column="5" />
+      <File FileName="Assets\Scripts\notaFinal.cs" Line="84" Column="4" />
+      <File FileName="Assets\Scripts\infoTheme.cs" Line="75" Column="8" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

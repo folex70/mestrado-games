@@ -15,7 +15,7 @@ public class Pergunta{
 	public int Pontos{get;set;}
 	public int IdTema{get;set;}
 	public string Tema{get;set;}
-
+	//quiz
 	public Pergunta(int idpergunta,
 					string pergunta1,
 					string alternativa1,
@@ -38,7 +38,28 @@ public class Pergunta{
 		this.IdTema       = idtema;
 		this.Tema 	 	  = tema;
 	}
-
+	//forca
+	public Pergunta(int idpergunta,
+		string pergunta1,
+		string alternativa1,
+		string alternativa2,
+		string alternativa3,
+		string alternativa4,
+		int pontos,			
+		int idtema,
+		string tema	)
+	{
+		this.IdPergunta = idpergunta;
+		this.Pergunta1 = pergunta1;
+		this.Alternativa1 = alternativa1;
+		this.Alternativa2 = alternativa2;
+		this.Alternativa3 = alternativa3;
+		this.Alternativa4 = alternativa4;
+		this.Pontos       = pontos;
+		this.IdTema       = idtema;
+		this.Tema 	 	  = tema;
+	}
+	//vouf
 	public Pergunta(int idpergunta,
 					string pergunta1,
 					string resposta1,

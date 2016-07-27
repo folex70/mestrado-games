@@ -80,6 +80,35 @@ public class notaFinal : MonoBehaviour {
 				medalhaOuro.SetActive (false);
 			}	
 		}
+		else if (sceneName == "forca-nota") {
+
+			medalhaBronze.SetActive (false);
+			medalhaPrata.SetActive (false);
+			medalhaOuro.SetActive (false);
+
+			idTema = PlayerPrefs.GetInt("forcaidTema");
+			Debug.Log (idTema);
+			notaF = PlayerPrefs.GetInt ("forcanotaFinalTemp"+idTema.ToString ());
+			acertos = PlayerPrefs.GetInt ("forcaacertosTemp"+idTema.ToString ());
+
+			txtNota.text = notaF.ToString ();
+
+			txtTema.text = "Voce ganhou  "+acertos.ToString()+" pontos"; 
+
+			if (notaF == 10) {
+				medalhaBronze.SetActive (true);
+				medalhaPrata.SetActive (true);
+				medalhaOuro.SetActive (true);
+			} else if (notaF >= 7) {
+				medalhaBronze.SetActive (true);
+				medalhaPrata.SetActive (true);
+				medalhaOuro.SetActive (false);
+			} else if(notaF >=3){
+				medalhaBronze.SetActive (true);
+				medalhaPrata.SetActive (false);
+				medalhaOuro.SetActive (false);
+			}	
+		}
 	}
 
 	public void jogarNovamente(){
@@ -90,6 +119,9 @@ public class notaFinal : MonoBehaviour {
 		}
 		else if (sceneName == "vouf-nota") {
 			SceneManager.LoadScene ("vouf-tema1");		
+		}
+		else if (sceneName == "forca-nota") {
+			SceneManager.LoadScene ("forca-tema1");		
 		}
 	}
 }

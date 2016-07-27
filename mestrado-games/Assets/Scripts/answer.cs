@@ -68,7 +68,6 @@ public class answer : MonoBehaviour {
 			info.text = "Respondendo "+(idPergunta +1).ToString()
 				+ " de "+questoes.ToString()+" perguntas.";	
 		}
-
 	}
 
 	public void resposta(string alternativa){

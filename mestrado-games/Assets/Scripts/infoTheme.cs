@@ -65,8 +65,29 @@ public class infoTheme : MonoBehaviour {
 				medalhaOuro.SetActive (false);
 			}
 		}
+		else if (sceneName == "forca-temas") {
+
+			medalhaBronze.SetActive (false);
+			medalhaPrata.SetActive (false);
+			medalhaOuro.SetActive (false);
 
 
+			notaF = PlayerPrefs.GetInt ("forcanotaFinal"+idTema.ToString ());
+			//Debug.Log (notaF+" nofaF dentro de infoTheme"+idTema);
+			if (notaF == 10) {
+				medalhaBronze.SetActive (true);
+				medalhaPrata.SetActive (true);
+				medalhaOuro.SetActive (true);
+			} else if (notaF >= 7) {
+				medalhaBronze.SetActive (true);
+				medalhaPrata.SetActive (true);
+				medalhaOuro.SetActive (false);
+			} else if(notaF >=3){
+				medalhaBronze.SetActive (true);
+				medalhaPrata.SetActive (false);
+				medalhaOuro.SetActive (false);
+			}
+		}
 
 	}
 

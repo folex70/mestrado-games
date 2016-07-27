@@ -50,6 +50,7 @@
      <Compile Include="Assets\Scripts\Temas.cs" />
      <Compile Include="Assets\Scripts\answer.cs" />
      <Compile Include="Assets\Scripts\basicCommands.cs" />
+     <Compile Include="Assets\Scripts\gameForca.cs" />
      <Compile Include="Assets\Scripts\gameThemes.cs" />
      <Compile Include="Assets\Scripts\infoTheme.cs" />
      <Compile Include="Assets\Scripts\moveOffSet.cs" />

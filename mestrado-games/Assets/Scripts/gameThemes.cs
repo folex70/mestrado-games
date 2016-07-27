@@ -47,6 +47,11 @@ public class gameThemes : MonoBehaviour {
 				nomeTema [i + 1] = DBManager.voufTemasLista [i].Tema;
 				Debug.Log (DBManager.voufTemasLista [i].Tema);
 			}
+		} else if (sceneName == "forca-temas") {
+			Debug.Log (DBManager.forcaTemasLista.Count);
+			for (int i = 0; i < DBManager.forcaTemasLista.Count; i++) {
+				nomeTema [i + 1] = DBManager.forcaTemasLista [i].Tema;
+			}
 		}
 	}
 
@@ -73,6 +78,10 @@ public class gameThemes : MonoBehaviour {
 				PlayerPrefs.SetInt ("voufidTema", idTema);
 				notaF = PlayerPrefs.GetInt ("voufnotaFinal" + idTema.ToString ());
 				acertos = PlayerPrefs.GetInt ("voufacertos" + idTema.ToString ());
+			}else if (sceneName == "forca-temas") {
+				PlayerPrefs.SetInt ("forcaidTema", idTema);
+				notaF = PlayerPrefs.GetInt ("forcanotaFinal" + idTema.ToString ());
+				acertos = PlayerPrefs.GetInt ("forcaacertos" + idTema.ToString ());
 			}
 
 			if (notaF == 10) {
@@ -98,6 +107,8 @@ public class gameThemes : MonoBehaviour {
 				PlayerPrefs.SetInt ("idTema", idTema);
 			} else if (sceneName == "vouf-temas") {
 				PlayerPrefs.SetInt ("voufidTema", idTema);
+			}else if (sceneName == "forca-temas") {
+				PlayerPrefs.SetInt ("forcaidTema", idTema);
 			}
 			textNomeTema.text = nomeTema [i];
 			infoTemas.SetActive (false);
@@ -119,6 +130,12 @@ public class gameThemes : MonoBehaviour {
 		else if(sceneName == "vouf-temas") {
 			SceneManager.LoadScene ("vouf-tema1");
 		}
+		else if(sceneName == "forca-temas") {
+			SceneManager.LoadScene ("forca-tema1");
+		}
 	}
 
+	public void responder(){
+		
+	}
 }

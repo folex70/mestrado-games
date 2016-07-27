@@ -18,6 +18,9 @@ public class DBManager : MonoBehaviour {
 	static public List<Pergunta> voufPerguntasLista = new List<Pergunta>();
 	static public List<Temas> voufTemasLista = new List<Temas>();
 
+	static public List<Pergunta> forcaPerguntasLista = new List<Pergunta>();
+	static public List<Temas> forcaTemasLista = new List<Temas>();
+
 	public Text textTema;
 	public InputField enterTema;
 	public InputField enterPergunta1;
@@ -35,14 +38,11 @@ public class DBManager : MonoBehaviour {
 		connectionString = "URI=file:" + Application.dataPath + "/mestradodb.sqlite";
 		CreateTable ();
 		voufCreateTable ();
+		forcaCreateTable ();
 		GetTemas ();
 		voufGetTemas ();
+		forcaGetTemas ();
 		countPerguntasCadastradas = 0;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 
 	private void CreateTable(){
@@ -63,6 +63,18 @@ public class DBManager : MonoBehaviour {
 			dbConnection.Open ();
 			using (IDbCommand dbCmd = dbConnection.CreateCommand ()) {
 				string sqlQuery = String.Format ("CREATE  TABLE  IF NOT EXISTS \"main\".\"voufGame_table\" (\"idpergunta\" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , \"pergunta\" TEXT NOT NULL ,\"verdadeiro_ou_falso\" TEXT NOT NULL , \"idtema\" INTEGER NOT NULL , \"tema\" TEXT NOT NULL , \"data\" DATETIME NOT NULL  DEFAULT CURRENT_TIME)");
+				dbCmd.CommandText = sqlQuery;
+				dbCmd.ExecuteScalar();
+				dbConnection.Close();
+			}
+		}
+	}
+
+	private void forcaCreateTable(){
+		using (IDbConnection dbConnection = new SqliteConnection (connectionString)) {
+			dbConnection.Open ();
+			using (IDbCommand dbCmd = dbConnection.CreateCommand ()) {
+				string sqlQuery = String.Format ("CREATE TABLE IF NOT EXISTS forcaGame_table (idpergunta INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , palavra TEXT NOT NULL , dica1 TEXT NOT NULL , dica2 TEXT NOT NULL , dica3 TEXT NOT NULL , dica4 TEXT NOT NULL , tempo_gasto_segundos INTEGER NOT NULL ,idtema INTEGER NOT NULL , tema TEXT NOT NULL , data DATETIME NOT NULL  DEFAULT CURRENT_TIME);");
 				dbCmd.CommandText = sqlQuery;
 				dbCmd.ExecuteScalar();
 				dbConnection.Close();
@@ -162,6 +174,28 @@ public class DBManager : MonoBehaviour {
 		}
 	}
 
+	public void forcaGetPerguntaByTema(int idtema){
+
+		forcaPerguntasLista.Clear();
+
+		using (IDbConnection dbConnection = new SqliteConnection(connectionString)){
+
+			dbConnection.Open();
+
+			using (IDbCommand dbCmd = dbConnection.CreateCommand()){
+				string sqlQuery = String.Format("SELECT * FROM forcaGame_table where idtema = (\"{0}\");",idtema);
+				dbCmd.CommandText = sqlQuery;
+				using (IDataReader reader = dbCmd.ExecuteReader()){
+					while(reader.Read()){
+						forcaPerguntasLista.Add(new Pergunta(reader.GetInt32(0),reader.GetString(1),reader.GetString(2),reader.GetString(3),reader.GetString(4),reader.GetString(5),reader.GetInt32(6),reader.GetInt32(7),reader.GetString(8)));
+					}
+					dbConnection.Close();
+					reader.Close();
+				}
+			}
+		}
+	}
+
 	private void GetTemas(){
 
 		temasLista.Clear();
@@ -198,6 +232,24 @@ public class DBManager : MonoBehaviour {
 				using (IDataReader reader = dbCmd.ExecuteReader()){
 					while(reader.Read()){
 						voufTemasLista.Add(new Temas(reader.GetInt32(0),reader.GetString(1)));
+					}
+					dbConnection.Close();
+					reader.Close();
+				}
+			}
+		}
+	}
+
+	private void forcaGetTemas(){
+		forcaTemasLista.Clear();
+		using (IDbConnection dbConnection = new SqliteConnection(connectionString)){
+			dbConnection.Open();
+			using (IDbCommand dbCmd = dbConnection.CreateCommand()){
+				string sqlQuery = "select distinct idtema,tema from forcagame_table";
+				dbCmd.CommandText = sqlQuery;
+				using (IDataReader reader = dbCmd.ExecuteReader()){
+					while(reader.Read()){
+						forcaTemasLista.Add(new Temas(reader.GetInt32(0),reader.GetString(1)));
 					}
 					dbConnection.Close();
 					reader.Close();
@@ -266,6 +318,20 @@ public class DBManager : MonoBehaviour {
 			}
 		}
 	}
+
+	//insert
+	private void forcaInsertQuestoes(string palavra,string dica1,string dica2,string dica3,string dica4,int tempo_gasto_segundos, int idtema, string tema ){
+		using (IDbConnection dbConnection = new SqliteConnection(connectionString)){
+			dbConnection.Open();
+			using (IDbCommand dbCmd = dbConnection.CreateCommand()){
+				string sqlQuery = String.Format("insert into forcaGame_table(palavra,dica1,dica2,dica3,dica4,tempo_gasto_segundos,idtema,tema) values (\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\");"
+					,palavra,dica1,dica2,dica3,dica4,tempo_gasto_segundos,idtema,tema);
+				dbCmd.CommandText = sqlQuery;
+				dbCmd.ExecuteScalar();
+				dbConnection.Close();
+			}
+		}
+	}
 	
 	private void DeleteQuestoes(int idpergunta){
 		using (IDbConnection dbConnection = new SqliteConnection(connectionString)){			
@@ -319,6 +385,31 @@ public class DBManager : MonoBehaviour {
 
 				PlayerPrefs.SetInt ("voufnotaFinal"+idTema.ToString (),0);
 				PlayerPrefs.SetInt ("voufacertos"+idTema.ToString (), (int) 0);
+
+				string sceneName = SceneManager.GetActiveScene().name;
+				// load the same scene
+				SceneManager.LoadScene(sceneName,LoadSceneMode.Single);
+
+			}
+		}
+	}
+
+	//delete
+	public void forcaDeleteTema(){
+		int idTema = PlayerPrefs.GetInt ("forcaidTema");
+		using (IDbConnection dbConnection = new SqliteConnection(connectionString)){
+
+			dbConnection.Open();
+
+			using (IDbCommand dbCmd = dbConnection.CreateCommand()){
+				string sqlQuery = String.Format("delete from forcaGame_table where idtema = (\"{0}\");",idTema);
+				Debug.Log (sqlQuery);
+				dbCmd.CommandText = sqlQuery;
+				dbCmd.ExecuteScalar();
+				dbConnection.Close();
+
+				PlayerPrefs.SetInt ("forcanotaFinal"+idTema.ToString (),0);
+				PlayerPrefs.SetInt ("forcaacertos"+idTema.ToString (), (int) 0);
 
 				string sceneName = SceneManager.GetActiveScene().name;
 				// load the same scene
@@ -387,11 +478,18 @@ public class DBManager : MonoBehaviour {
 		enterPergunta1.text 	= string.Empty;
 	}
 
+	public void forcaEnterPergunta(){
+		int idtema = forcaTemasLista.Count + 1;
+		forcaInsertQuestoes (enterPergunta1.text, enterAlternativa1.text, enterAlternativa2.text, enterAlternativa3.text, enterAlternativa4.text, 0, idtema, enterTema.text);
+		SceneManager.LoadScene ("forca-temas");
+	}	
+
 	//CREATE  TABLE  IF NOT EXISTS "main"."quizGame_table" ("idpergunta" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , "pergunta" TEXT NOT NULL , "resposta1" TEXT NOT NULL , "resposta2" TEXT NOT NULL , "resposta3" TEXT NOT NULL , "resposta4" TEXT NOT NULL , "resposta_correta" TEXT NOT NULL , "idtema" INTEGER NOT NULL , "tema" TEXT NOT NULL , "data" DATETIME NOT NULL  DEFAULT CURRENT_TIME)
 	//select distinct idtema from quizgame_table ;
 	//--insert into quizGame_table(pergunta,resposta1,resposta2,resposta3,resposta4,resposta_correta,pontos,idtema,tema)  values('quanto é 2+2','1','2','3','4','4','0','1','matematica') ;
 	//CREATE  TABLE  IF NOT EXISTS "main"."voufGame_table" ("idpergunta" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , "pergunta" TEXT NOT NULL ,"verdadeiro_ou_falso" TEXT NOT NULL , "idtema" INTEGER NOT NULL , "tema" TEXT NOT NULL , "data" DATETIME NOT NULL  DEFAULT CURRENT_TIME)
-	//--insert into voufGame_table(pergunta,verdadeiro_ou_falso,pontos,idtema,tema)  values('2+2 e 4?','V','0','1','matematica') ;
+	//insert into voufGame_table(pergunta,verdadeiro_ou_falso,pontos,idtema,tema)  values('2+2 e 4?','V','0','1','matematica') ;
 	//	INSERT INTO "main"."voufGame_table" ("pergunta","verdadeiro_ou_falso","idtema","tema") VALUES (?1,?2,?3,?4)	Parameters:	param 1 (text): 1+1 e igual a 2?	param 2 (text): V	param 3 (integer): 1	param 4 (text): matematica
-
+	//CREATE TABLE IF NOT EXISTS forcaGame_table (idpergunta INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , palavra TEXT NOT NULL , dica1 TEXT NOT NULL , dica2 TEXT NOT NULL , dica3 TEXT NOT NULL , dica4 TEXT NOT NULL , tempo_gasto_segundos INTEGER NOT NULL ,idtema INTEGER NOT NULL , tema TEXT NOT NULL , data DATETIME NOT NULL  DEFAULT CURRENT_TIME);
+	//insert into forcaGame_table(palavra ,dica1,dica2,dica3,dica4,tempo_gasto_segundos,idtema,tema) values ('ouro','vale mais do que dinheiro','pode ser de tolo','está na tabela periódica','tem cor amarelada',0,1,'química');
 }
